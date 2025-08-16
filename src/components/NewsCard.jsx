@@ -1,8 +1,9 @@
-import { useState } from "react";
 import { FaEye, FaStar, FaShareAlt, FaBookmark } from "react-icons/fa";
+import { Link } from "react-router";
 
 export default function NewsCard({ news }) {
   const {
+    id,
     title,
     rating,
     total_view,
@@ -11,8 +12,6 @@ export default function NewsCard({ news }) {
     details,
     tags,
   } = news;
-
-  const [showFull, setShowFull] = useState(false);
 
   // Format date
   const formattedDate = new Date(news.author.published_date).toLocaleDateString(
@@ -37,7 +36,7 @@ export default function NewsCard({ news }) {
   };
 
   return (
-    <div className=" card w-full bg-base-100  rounded-lg overflow-hidden transform transition duration-300 hover:shadow-lg hover:-translate-y-1">
+    <div className="card w-full bg-base-100 rounded-lg overflow-hidden transform transition duration-300 hover:shadow-lg hover:-translate-y-1">
       {/* Author + Icons */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
@@ -72,21 +71,14 @@ export default function NewsCard({ news }) {
         />
       </figure>
 
-      {/* Details */}
-      <div className="p-4 text-gray-600 text-sm transition-all duration-500 ease-in-out">
-        {showFull ? (
-          <p>{details}</p>
-        ) : (
-          <p>
-            {details.slice(0, 200)}...
-            <button
-              onClick={() => setShowFull(true)}
-              className="ml-1 text-primary font-medium hover:underline transition duration-200"
-            >
-              Read More
-            </button>
-          </p>
-        )}
+      {/* Details - always cut with fake Read More */}
+      <div className="p-4 text-gray-600 text-sm">
+        <p>
+          {details.slice(0, 200)}...
+          <Link to={`/news-details/${id}`} className="ml-1 text-primary font-medium hover:underline cursor-default">
+            Read More
+          </Link>
+        </p>
       </div>
 
       {/* Tags */}
