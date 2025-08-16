@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router'; // FIX: use react-router-dom for Link
+import { Link, useNavigate } from 'react-router'; // FIX: use react-router-dom for Link
 import { AuthContext } from '../provider/AuthProvider';
 import { useState } from 'react';
 
 const Register = () => {
-    const { createUser ,setUser } = useContext(AuthContext); // FIX: useContext instead of use
+    const { createUser ,setUser, updateUser } = useContext(AuthContext); // FIX: useContext instead of use
     const [nameError, setNameError] = useState("");
+
+    const navigate = useNavigate()
 
     const handleRegister = (e) => {
         e.preventDefault(); // Prevent form reload
@@ -25,7 +27,13 @@ const Register = () => {
         .then((result) => {
            const user = result.user;
            //    console.log(user);
-           setUser(user);
+           updateUser({displayName: name, photoURL: photo}).then(() => {
+               setUser({...user, displayName: name, photoURL: photo});
+               navigate('/');
+           }).catch((error)=>{
+              console.log(error)
+              setUser(user)
+           });
         })
         .catch((error) => {
            const errorcode = error.code;
